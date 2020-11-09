@@ -22,6 +22,7 @@ type DoublyLinkedList interface {
 	Insert(payload interface{}) DoublyLinkedList
 	Delete() DoublyLinkedList
 	Update(payload interface{}) DoublyLinkedList
+	Length() int
 }
 
 func isEmptyList(l *doublylinkedlist) bool {
@@ -30,6 +31,10 @@ func isEmptyList(l *doublylinkedlist) bool {
 
 func isFirstInList(l *doublylinkedlist) bool {
 	return l.edges.first == l
+}
+
+func (l *doublylinkedlist) Length() int {
+	return l.edges.length
 }
 
 func (l *doublylinkedlist) Value() interface{} {
@@ -67,6 +72,7 @@ func (l *doublylinkedlist) Insert(payload interface{}) DoublyLinkedList {
 		l.next.prev = inserted
 	}
 	l.next = inserted
+	l.edges.length++
 	return l.next
 }
 
@@ -83,6 +89,11 @@ func (l *doublylinkedlist) Update(payload interface{}) DoublyLinkedList {
 }
 
 func (l *doublylinkedlist) Delete() DoublyLinkedList {
+	l.edges.length--
+	if l.edges.length < 0 {
+		l.edges.length = 0
+	}
+
 	if l.prev != nil {
 		if l.next != nil {
 			l.next.prev = l.prev

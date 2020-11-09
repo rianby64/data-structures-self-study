@@ -16,6 +16,7 @@ func checkExpected(ll DoublyLinkedList, expected []int, t *testing.T) {
 		i++
 	}
 
+	assert.Equal(t, len(expected), ll.Length())
 	assert.Equal(t, expected, actual)
 }
 
