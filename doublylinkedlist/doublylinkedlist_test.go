@@ -9,13 +9,17 @@ import (
 func checkExpected(ll DoublyLinkedList, expected []int, t *testing.T) {
 	actual := []int{}
 	i := 0
-	for curr := ll.Next(); curr != nil && i < len(expected); curr = curr.Next() {
+	for curr := ll.Next(); curr != nil; curr = curr.Next() {
+		if i > len(expected) {
+			break
+		}
 		actual = append(actual, curr.Value().(int))
 		assert.Equal(t, expected[0], curr.First().Value().(int))
 		assert.Equal(t, expected[len(expected)-1], curr.Last().Value().(int))
 		i++
 	}
 
+	assert.Equal(t, i, len(expected))
 	assert.Equal(t, len(expected), ll.Length())
 	assert.Equal(t, expected, actual)
 }
