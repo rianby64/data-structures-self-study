@@ -312,13 +312,24 @@ func Test_addFivePayloadsThenFilter445566(t *testing.T) {
 
 	filtred := ll.Filter(func(d DoublyLinkedList, i int) bool {
 		n := d.Value().(int)
-		if n > 66 {
-			return false
-		}
-		if n < 44 {
-			return false
-		}
-		return true
+		return 44 <= n && n <= 66
+	})
+	checkExpected(ll, initial, t)
+	checkExpected(filtred, expected, t)
+}
+
+func Test_addFivePayloadsThenFilter445566ByI(t *testing.T) {
+	ll := New()
+
+	initial := []int{22, 33, 44, 55, 66, 77, 88, 99}
+	expected := []int{44, 55, 66}
+	curr := ll
+	for v := range initial {
+		curr = curr.Insert(initial[v])
+	}
+
+	filtred := ll.Filter(func(d DoublyLinkedList, i int) bool {
+		return 2 <= i && i <= 4
 	})
 	checkExpected(ll, initial, t)
 	checkExpected(filtred, expected, t)
