@@ -13,6 +13,8 @@ type doublylinkedlist struct {
 	prev    *doublylinkedlist
 }
 
+type predicate func(item DoublyLinkedList, index int) bool
+
 // DoublyLinkedList whatever
 type DoublyLinkedList interface {
 	Value() interface{}
@@ -23,6 +25,8 @@ type DoublyLinkedList interface {
 	Delete() DoublyLinkedList
 	Update(payload interface{}) DoublyLinkedList
 	Length() int
+
+	Filter(p predicate) DoublyLinkedList
 }
 
 func isEmptyList(l *doublylinkedlist) bool {
@@ -31,6 +35,18 @@ func isEmptyList(l *doublylinkedlist) bool {
 
 func isFirstInList(l *doublylinkedlist) bool {
 	return l.edges.first == l
+}
+
+func (l *doublylinkedlist) Filter(p predicate) DoublyLinkedList {
+	ll := New()
+	i := 0
+	for curr := l.edges.first.next; curr != nil && i < l.edges.length; curr = curr.next {
+		if p(curr, i) {
+			ll.Last().Insert(curr.payload)
+		}
+		i++
+	}
+	return ll
 }
 
 func (l *doublylinkedlist) Length() int {

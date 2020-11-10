@@ -12,9 +12,13 @@ func main() {
 
 	dll.Insert(33).Insert(44).Insert(55).Insert(66)
 
-	for curr := dll.Next(); curr != nil; curr = curr.Next() {
-		fmt.Println(curr)
-	}
+	ss := dll.Filter(func(d doublylinkedlist.DoublyLinkedList, i int) bool {
+		fmt.Println(d, i)
+		return true
+	})
+	// for curr := dll.Next(); curr != nil; curr = curr.Next() {
+	// 	fmt.Println(curr)
+	// }
 
-	fmt.Println("finito")
+	fmt.Println("finito", ss)
 }

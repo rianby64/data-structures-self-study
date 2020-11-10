@@ -283,3 +283,43 @@ func Test_addOnePayloadThenUpdateFromLast(t *testing.T) {
 
 	checkExpected(ll, expected, t)
 }
+
+func Test_addFivePayloadsThenFilterTrue(t *testing.T) {
+	ll := New()
+
+	expected := []int{22, 33, 44, 55, 66, 77, 88, 99}
+	curr := ll
+	for v := range expected {
+		curr = curr.Insert(expected[v])
+	}
+
+	filtred := ll.Filter(func(d DoublyLinkedList, i int) bool {
+		return true
+	})
+	checkExpected(ll, expected, t)
+	checkExpected(filtred, expected, t)
+}
+
+func Test_addFivePayloadsThenFilter445566(t *testing.T) {
+	ll := New()
+
+	initial := []int{22, 33, 44, 55, 66, 77, 88, 99}
+	expected := []int{44, 55, 66}
+	curr := ll
+	for v := range initial {
+		curr = curr.Insert(initial[v])
+	}
+
+	filtred := ll.Filter(func(d DoublyLinkedList, i int) bool {
+		n := d.Value().(int)
+		if n > 66 {
+			return false
+		}
+		if n < 44 {
+			return false
+		}
+		return true
+	})
+	checkExpected(ll, initial, t)
+	checkExpected(filtred, expected, t)
+}
