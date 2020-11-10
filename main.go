@@ -16,9 +16,11 @@ func main() {
 		fmt.Println(d, i)
 		return true
 	})
-	// for curr := dll.Next(); curr != nil; curr = curr.Next() {
-	// 	fmt.Println(curr)
-	// }
 
-	fmt.Println("finito", ss)
+	found := dll.Find(func(d doublylinkedlist.DoublyLinkedList, i int) bool {
+		v := d.Value().(int)
+		return v == 44
+	})
+
+	fmt.Println("finito", dll, ss, found)
 }

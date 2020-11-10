@@ -27,6 +27,7 @@ type DoublyLinkedList interface {
 	Length() int
 
 	Filter(p predicate) DoublyLinkedList
+	Find(p predicate) DoublyLinkedList
 }
 
 func isEmptyList(l *doublylinkedlist) bool {
@@ -37,6 +38,7 @@ func isFirstInList(l *doublylinkedlist) bool {
 	return l.edges.first == l
 }
 
+// Filter should be inside of an abstraction as this method doesn't belong to Linked-List
 func (l *doublylinkedlist) Filter(p predicate) DoublyLinkedList {
 	ll := New()
 	i := 0
@@ -47,6 +49,18 @@ func (l *doublylinkedlist) Filter(p predicate) DoublyLinkedList {
 		i++
 	}
 	return ll
+}
+
+// Find should be inside of an abstraction as this method doesn't belong to Linked-List
+func (l *doublylinkedlist) Find(p predicate) DoublyLinkedList {
+	i := 0
+	for curr := l.edges.first.next; curr != nil && i < l.edges.length; curr = curr.next {
+		if p(curr, i) {
+			return curr
+		}
+		i++
+	}
+	return nil
 }
 
 func (l *doublylinkedlist) Length() int {
