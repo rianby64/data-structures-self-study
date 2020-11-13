@@ -1,5 +1,7 @@
 package doublylinkedlist
 
+import "github.com/rianby64/data-structures-self-study/cell"
+
 type edges struct {
 	first  *doublylinkedlist
 	last   *doublylinkedlist
@@ -7,7 +9,7 @@ type edges struct {
 }
 
 type doublylinkedlist struct {
-	payload interface{}
+	payload cell.Cell
 	edges   *edges
 	next    *doublylinkedlist
 	prev    *doublylinkedlist
@@ -44,7 +46,7 @@ func (l *doublylinkedlist) Filter(p predicate) DoublyLinkedList {
 	i := 0
 	for curr := l.edges.first.next; curr != nil && i < l.edges.length; curr = curr.next {
 		if p(curr, i) {
-			ll.Last().Insert(curr.payload)
+			ll.Last().Insert(curr.payload.Value())
 		}
 		i++
 	}
@@ -68,7 +70,10 @@ func (l *doublylinkedlist) Length() int {
 }
 
 func (l *doublylinkedlist) Value() interface{} {
-	return l.payload
+	if l.payload != nil {
+		return l.payload.Value()
+	}
+	return nil
 }
 
 func (l *doublylinkedlist) Next() DoublyLinkedList {
@@ -92,7 +97,7 @@ func (l *doublylinkedlist) Last() DoublyLinkedList {
 func (l *doublylinkedlist) Insert(payload interface{}) DoublyLinkedList {
 	inserted := &doublylinkedlist{
 		edges:   l.edges,
-		payload: payload,
+		payload: cell.New(payload),
 		next:    l.next,
 		prev:    l,
 	}
@@ -111,10 +116,10 @@ func (l *doublylinkedlist) Update(payload interface{}) DoublyLinkedList {
 		return l.Insert(payload)
 	}
 	if isFirstInList(l) {
-		l.next.payload = payload
+		l.next.payload.SetValue(payload)
 		return l.next
 	}
-	l.payload = payload
+	l.payload.SetValue(payload)
 	return l
 }
 
