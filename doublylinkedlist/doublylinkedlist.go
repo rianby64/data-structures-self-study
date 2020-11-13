@@ -19,7 +19,7 @@ type predicate func(item DoublyLinkedList, index int) bool
 
 // DoublyLinkedList whatever
 type DoublyLinkedList interface {
-	Value() interface{}
+	cell.Cell
 	Next() DoublyLinkedList
 	First() DoublyLinkedList
 	Last() DoublyLinkedList
@@ -38,6 +38,10 @@ func isEmptyList(l *doublylinkedlist) bool {
 
 func isFirstInList(l *doublylinkedlist) bool {
 	return l.edges.first == l
+}
+
+func (l *doublylinkedlist) SetValue(v interface{}) {
+	l.payload.SetValue(v)
 }
 
 // Filter should be inside of an abstraction as this method doesn't belong to Linked-List
@@ -111,6 +115,7 @@ func (l *doublylinkedlist) Insert(payload interface{}) DoublyLinkedList {
 	return l.next
 }
 
+// perdio sentido esta funcion
 func (l *doublylinkedlist) Update(payload interface{}) DoublyLinkedList {
 	if isEmptyList(l) {
 		return l.Insert(payload)
