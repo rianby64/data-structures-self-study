@@ -1,51 +1,51 @@
-package doublylinkedlist
+package list
 
 import "github.com/rianby64/data-structures-self-study/cell"
 
 type edges struct {
-	first  *doublylinkedlist
-	last   *doublylinkedlist
+	first  *list
+	last   *list
 	length int
 }
 
-type doublylinkedlist struct {
+type list struct {
 	payload cell.Cell
 	edges   *edges
-	next    *doublylinkedlist
-	prev    *doublylinkedlist
+	next    *list
+	prev    *list
 }
 
-type predicate func(item DoublyLinkedList, index int) bool
+type predicate func(item List, index int) bool
 
-// DoublyLinkedList whatever
-type DoublyLinkedList interface {
+// List implements a list using a doubly-linked-list
+type List interface {
 	cell.Cell
-	Next() DoublyLinkedList
-	First() DoublyLinkedList
-	Last() DoublyLinkedList
-	Insert(payload interface{}) DoublyLinkedList
-	Delete() DoublyLinkedList
-	Update(payload interface{}) DoublyLinkedList
+	Next() List
+	First() List
+	Last() List
+	Insert(payload interface{}) List
+	Delete() List
+	Update(payload interface{}) List
 	Length() int
 
-	Filter(p predicate) DoublyLinkedList
-	Find(p predicate) DoublyLinkedList
+	Filter(p predicate) List
+	Find(p predicate) List
 }
 
-func isEmptyList(l *doublylinkedlist) bool {
+func isEmptyList(l *list) bool {
 	return l.edges.first.Next() == nil
 }
 
-func isFirstInList(l *doublylinkedlist) bool {
+func isFirstInList(l *list) bool {
 	return l.edges.first == l
 }
 
-func (l *doublylinkedlist) SetValue(v interface{}) {
+func (l *list) SetValue(v interface{}) {
 	l.payload.SetValue(v)
 }
 
 // Filter should be inside of an abstraction as this method doesn't belong to Linked-List
-func (l *doublylinkedlist) Filter(p predicate) DoublyLinkedList {
+func (l *list) Filter(p predicate) List {
 	ll := New()
 	i := 0
 	for curr := l.edges.first.next; curr != nil && i < l.edges.length; curr = curr.next {
@@ -58,7 +58,7 @@ func (l *doublylinkedlist) Filter(p predicate) DoublyLinkedList {
 }
 
 // Find should be inside of an abstraction as this method doesn't belong to Linked-List
-func (l *doublylinkedlist) Find(p predicate) DoublyLinkedList {
+func (l *list) Find(p predicate) List {
 	i := 0
 	for curr := l.edges.first.next; curr != nil && i < l.edges.length; curr = curr.next {
 		if p(curr, i) {
@@ -69,37 +69,37 @@ func (l *doublylinkedlist) Find(p predicate) DoublyLinkedList {
 	return nil
 }
 
-func (l *doublylinkedlist) Length() int {
+func (l *list) Length() int {
 	return l.edges.length
 }
 
-func (l *doublylinkedlist) Value() interface{} {
+func (l *list) Value() interface{} {
 	if l.payload != nil {
 		return l.payload.Value()
 	}
 	return nil
 }
 
-func (l *doublylinkedlist) Next() DoublyLinkedList {
+func (l *list) Next() List {
 	if l.next == nil {
 		return nil
 	}
 	return l.next
 }
 
-func (l *doublylinkedlist) First() DoublyLinkedList {
+func (l *list) First() List {
 	if isEmptyList(l) {
 		return l.edges.first
 	}
 	return l.edges.first.Next()
 }
 
-func (l *doublylinkedlist) Last() DoublyLinkedList {
+func (l *list) Last() List {
 	return l.edges.last
 }
 
-func (l *doublylinkedlist) Insert(payload interface{}) DoublyLinkedList {
-	inserted := &doublylinkedlist{
+func (l *list) Insert(payload interface{}) List {
+	inserted := &list{
 		edges:   l.edges,
 		payload: cell.New(payload),
 		next:    l.next,
@@ -116,7 +116,7 @@ func (l *doublylinkedlist) Insert(payload interface{}) DoublyLinkedList {
 }
 
 // perdio sentido esta funcion
-func (l *doublylinkedlist) Update(payload interface{}) DoublyLinkedList {
+func (l *list) Update(payload interface{}) List {
 	if isEmptyList(l) {
 		return l.Insert(payload)
 	}
@@ -128,7 +128,7 @@ func (l *doublylinkedlist) Update(payload interface{}) DoublyLinkedList {
 	return l
 }
 
-func (l *doublylinkedlist) Delete() DoublyLinkedList {
+func (l *list) Delete() List {
 	l.edges.length--
 	if l.edges.length < 0 {
 		l.edges.length = 0
@@ -156,8 +156,8 @@ func (l *doublylinkedlist) Delete() DoublyLinkedList {
 }
 
 // New is the constructor
-func New() DoublyLinkedList {
-	l := doublylinkedlist{}
+func New() List {
+	l := list{}
 	l.edges = &edges{
 		first: &l,
 		last:  &l,

@@ -1,4 +1,4 @@
-package doublylinkedlist
+package list
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func checkExpected(ll DoublyLinkedList, expected []int, t *testing.T) {
+func checkExpected(ll List, expected []int, t *testing.T) {
 	actual := []int{}
 	i := 0
 	for curr := ll.Next(); curr != nil; curr = curr.Next() {
@@ -297,7 +297,7 @@ func Test_addFivePayloadsThenFilterTrue(t *testing.T) {
 		curr = curr.Insert(expected[v])
 	}
 
-	filtred := ll.Filter(func(d DoublyLinkedList, i int) bool {
+	filtred := ll.Filter(func(d List, i int) bool {
 		return true
 	})
 	checkExpected(ll, expected, t)
@@ -314,7 +314,7 @@ func Test_addFivePayloadsThenFilter445566(t *testing.T) {
 		curr = curr.Insert(initial[v])
 	}
 
-	filtred := ll.Filter(func(d DoublyLinkedList, i int) bool {
+	filtred := ll.Filter(func(d List, i int) bool {
 		n := d.Value().(int)
 		return 44 <= n && n <= 66
 	})
@@ -332,7 +332,7 @@ func Test_addFivePayloadsThenFilter445566ByI(t *testing.T) {
 		curr = curr.Insert(initial[v])
 	}
 
-	filtred := ll.Filter(func(d DoublyLinkedList, i int) bool {
+	filtred := ll.Filter(func(d List, i int) bool {
 		return 2 <= i && i <= 4
 	})
 	checkExpected(ll, initial, t)
@@ -349,7 +349,7 @@ func Test_addFivePayloadsThenFilterToEmpty(t *testing.T) {
 		curr = curr.Insert(initial[v])
 	}
 
-	filtred := ll.Filter(func(d DoublyLinkedList, i int) bool {
+	filtred := ll.Filter(func(d List, i int) bool {
 		return false
 	})
 	checkExpected(ll, initial, t)
@@ -366,7 +366,7 @@ func Test_addFivePayloadsThenFound44(t *testing.T) {
 		curr = curr.Insert(initial[v])
 	}
 
-	found := ll.Find(func(d DoublyLinkedList, i int) bool {
+	found := ll.Find(func(d List, i int) bool {
 		n := d.Value().(int)
 		return n == expected
 	})
@@ -386,7 +386,7 @@ func Test_addFivePayloadsThenFoundNil(t *testing.T) {
 		curr = curr.Insert(initial[v])
 	}
 
-	found := ll.Find(func(d DoublyLinkedList, i int) bool {
+	found := ll.Find(func(d List, i int) bool {
 		return false
 	})
 	checkExpected(ll, initial, t)

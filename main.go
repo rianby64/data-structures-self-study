@@ -3,21 +3,21 @@ package main
 import (
 	"fmt"
 
-	"github.com/rianby64/data-structures-self-study/doublylinkedlist"
+	"github.com/rianby64/data-structures-self-study/list"
 )
 
 func main() {
 
-	dll := doublylinkedlist.New()
+	dll := list.New()
 
 	dll.Insert(33).Insert(44).Insert(55).Insert(66)
 
-	ss := dll.Filter(func(d doublylinkedlist.DoublyLinkedList, i int) bool {
+	ss := dll.Filter(func(d list.List, i int) bool {
 		fmt.Println(d, i)
 		return true
 	})
 
-	found := dll.Find(func(d doublylinkedlist.DoublyLinkedList, i int) bool {
+	found := dll.Find(func(d list.List, i int) bool {
 		v := d.Value().(int)
 		return v == 44
 	})

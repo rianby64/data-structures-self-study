@@ -1,7 +1,7 @@
 package lifo
 
 import (
-	"github.com/rianby64/data-structures-self-study/doublylinkedlist"
+	"github.com/rianby64/data-structures-self-study/list"
 )
 
 // Stack interface
@@ -11,7 +11,7 @@ type Stack interface {
 }
 
 type lifo struct {
-	list doublylinkedlist.DoublyLinkedList
+	list list.List
 }
 
 func (l *lifo) Pop() interface{} {
@@ -28,6 +28,6 @@ func (l *lifo) Push(c interface{}) {
 // New constructs an stack on top of a lifo
 func New() Stack {
 	return &lifo{
-		list: doublylinkedlist.New(),
+		list: list.New(),
 	}
 }
