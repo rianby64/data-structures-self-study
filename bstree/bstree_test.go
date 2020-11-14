@@ -24,7 +24,10 @@ func checkExpected(ll list.List, expected []int, t *testing.T) {
 }
 
 func Test_tree_case_positive(t *testing.T) {
-	btree := New()
+	c := func(a, b interface{}) bool {
+		return a.(int) > b.(int)
+	}
+	btree := New(c)
 
 	btree.Insert(50)
 	btree.Insert(30)

@@ -5,6 +5,9 @@ import (
 	"github.com/rianby64/data-structures-self-study/list"
 )
 
+// comparator type
+type comparator func(a, b interface{}) bool
+
 // BStree stands for Binary Search Tree interface
 type BStree interface {
 	cell.Cell
@@ -13,10 +16,11 @@ type BStree interface {
 }
 
 type bstree struct {
-	payload cell.Cell
-	root    *bstree
-	left    *bstree
-	right   *bstree
+	payload    cell.Cell
+	comparator comparator
+	root       *bstree
+	left       *bstree
+	right      *bstree
 }
 
 func (t *bstree) Value() interface{} {
@@ -58,42 +62,41 @@ func (t *bstree) Inorder() list.List {
 	return list
 }
 
-func insert(t *bstree, v interface{}) {
+func insert(t *bstree, v interface{}, c comparator) {
 	if t.payload == nil {
 		t.SetValue(v)
 		return
 	}
 
-	// aqui esto es motivo de llevarlo a una funcion comparadora
-	vnode := t.payload.Value().(int)
-	vinse := v.(int)
-
-	if vnode > vinse {
+	if c(t.payload.Value(), v) {
 		if t.left == nil {
 			t.left = &bstree{
-				root: t.root,
+				root:       t.root,
+				comparator: c,
 			}
 		}
-		insert(t.left, v)
+		insert(t.left, v, c)
 	} else {
 		if t.right == nil {
 			t.right = &bstree{
-				root: t.root,
+				root:       t.root,
+				comparator: c,
 			}
 		}
-		insert(t.right, v)
+		insert(t.right, v, c)
 	}
 }
 
 func (t *bstree) Insert(v interface{}) {
 	root := t.root
 
-	insert(root, v)
+	insert(root, v, root.comparator)
 }
 
 // New constructor
-func New() BStree {
+func New(c comparator) BStree {
 	t := &bstree{}
 	t.root = t
+	t.comparator = c
 	return t
 }
