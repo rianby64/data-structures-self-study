@@ -1,6 +1,8 @@
 package list
 
-import "github.com/rianby64/data-structures-self-study/cell"
+import (
+	"github.com/rianby64/data-structures-self-study/cell"
+)
 
 type edges struct {
 	first  *list
