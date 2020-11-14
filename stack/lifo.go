@@ -15,9 +15,9 @@ type lifo struct {
 }
 
 func (l *lifo) Pop() interface{} {
-	item := l.list.Last()
-	item.Delete()
-	return item.Value()
+	last := l.list.Last()
+	defer last.Delete()
+	return last.Value()
 }
 
 func (l *lifo) Push(c interface{}) {
