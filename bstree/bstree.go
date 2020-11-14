@@ -58,7 +58,7 @@ func (t *bstree) Inorder() list.List {
 	return list
 }
 
-func (t *bstree) Insert(v interface{}) {
+func insert(t *bstree, v interface{}) {
 	if t.payload == nil {
 		t.SetValue(v)
 		return
@@ -74,15 +74,21 @@ func (t *bstree) Insert(v interface{}) {
 				root: t.root,
 			}
 		}
-		t.left.Insert(v)
+		insert(t.left, v)
 	} else {
 		if t.right == nil {
 			t.right = &bstree{
 				root: t.root,
 			}
 		}
-		t.right.Insert(v)
+		insert(t.right, v)
 	}
+}
+
+func (t *bstree) Insert(v interface{}) {
+	root := t.root
+
+	insert(root, v)
 }
 
 // New constructor
