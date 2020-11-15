@@ -50,7 +50,7 @@ func Test_tree_inorder_empty(t *testing.T) {
 
 func Test_tree_case_inorder(t *testing.T) {
 	c := func(a, b interface{}) bool {
-		return a.(int) > b.(int)
+		return a.(int) >= b.(int)
 	}
 	btree := New(c)
 
@@ -70,7 +70,7 @@ func Test_tree_case_inorder(t *testing.T) {
 
 func Test_tree_case_inorder_chain(t *testing.T) {
 	c := func(a, b interface{}) bool {
-		return a.(int) > b.(int)
+		return a.(int) >= b.(int)
 	}
 	btree := New(c)
 
@@ -82,8 +82,91 @@ func Test_tree_case_inorder_chain(t *testing.T) {
 	checkExpected(l, expected, t)
 }
 
-func Test_tree_search_ok(t *testing.T) {
+func Test_tree_search_ok_middle_case_1(t *testing.T) {
 
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
+
+	expected := btree.Insert(50).Insert(30)
+	btree.Insert(20).Insert(40).Insert(70).Insert(60).Insert(80)
+
+	actual := btree.Find(30, func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+
+		return na == nb
+	})
+
+	assert.Equal(t, expected, actual)
+}
+
+func Test_tree_search_ok_middle_case_2(t *testing.T) {
+
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
+
+	expected := btree.Insert(50).Insert(30).Insert(20).Insert(40)
+	btree.Insert(70).Insert(60).Insert(80)
+
+	actual := btree.Find(40, func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+
+		return na == nb
+	})
+
+	assert.Equal(t, expected, actual)
+}
+
+func Test_tree_search_ok_first(t *testing.T) {
+
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
+
+	expected := btree.Insert(50)
+	btree.Insert(30).Insert(20).Insert(40).Insert(70).Insert(60).Insert(80)
+
+	actual := btree.Find(50, func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+
+		return na == nb
+	})
+
+	assert.Equal(t, expected, actual)
+}
+
+func Test_tree_search_ok_last(t *testing.T) {
+
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
+
+	expected := btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(60).Insert(80)
+
+	actual := btree.Find(80, func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+
+		return na == nb
+	})
+
+	assert.Equal(t, expected, actual)
 }
 
 func Test_tree_search_nil(t *testing.T) {

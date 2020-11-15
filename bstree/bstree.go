@@ -13,6 +13,8 @@ type BStree interface {
 	cell.Cell
 	Insert(v interface{}) BStree
 	Inorder() list.List
+
+	Find(value interface{}, comparator comparator) BStree
 }
 
 type bstree struct {
@@ -21,6 +23,35 @@ type bstree struct {
 	root       *bstree
 	left       *bstree
 	right      *bstree
+}
+
+func find(a interface{}, t *bstree, matcher, comparator comparator) BStree {
+	if matcher(a, t.Value()) {
+		return t
+	}
+
+	if t.left != nil {
+		if t.comparator(a, t.left.Value()) {
+			found := find(a, t.left, matcher, comparator)
+			if found != nil {
+				return found
+			}
+		}
+	}
+
+	if t.right != nil {
+		return find(a, t.right, matcher, comparator)
+	}
+
+	return nil
+}
+
+func (t *bstree) Find(value interface{}, matcher comparator) BStree {
+	if matcher == nil {
+		return nil
+	}
+
+	return find(value, t, matcher, t.comparator)
 }
 
 func (t *bstree) Value() interface{} {
@@ -63,7 +94,7 @@ func (t *bstree) Inorder() list.List {
 	return list
 }
 
-func insert(t *bstree, v interface{}, c comparator) BStree {
+func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
 	if t.payload == nil {
 		t.SetValue(v)
 		return t
@@ -94,15 +125,15 @@ func (t *bstree) Insert(v interface{}) BStree {
 }
 
 // New constructor
-func New(c comparator) BStree {
+func New(comparator func(a, b interface{}) bool) BStree {
 	t := &bstree{}
 	t.root = t
 	t.comparator = func(a, b interface{}) bool {
-		if c == nil {
+		if comparator == nil {
 			return false
 		}
 
-		return c(a, b)
+		return comparator(a, b)
 	}
 
 	return t
