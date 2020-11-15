@@ -174,6 +174,56 @@ func Test_tree_search_ok_last(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
+func Test_tree_length_empty(t *testing.T) {
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
+
+	assert.Equal(t, 0, btree.Length())
+}
+
+func Test_tree_length_one_leaf(t *testing.T) {
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
+
+	btree.Insert(50)
+
+	assert.Equal(t, 1, btree.Length())
+}
+
+func Test_tree_length_many_items(t *testing.T) {
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
+
+	actualNodes := []BStree{
+		btree.Insert(50),
+		btree.Insert(30),
+		btree.Insert(20),
+		btree.Insert(40),
+		btree.Insert(70),
+		btree.Insert(60),
+		btree.Insert(80),
+	}
+
+	expectedLenghts := []int{7, 3, 1, 1, 3, 1, 1}
+	for i, expectedLength := range expectedLenghts {
+		assert.Equal(t, expectedLength, actualNodes[i].Length(), i)
+	}
+
+	assert.Equal(t, 7, btree.Length())
+}
+
 func Test_tree_search_nil(t *testing.T) {
 	c := func(a, b interface{}) bool {
 		na := a.(int)

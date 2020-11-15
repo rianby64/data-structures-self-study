@@ -14,6 +14,7 @@ type BStree interface {
 	Insert(v interface{}) BStree
 	Inorder() list.List
 
+	Length() int
 	Parent() BStree
 	Left() BStree
 	Right() BStree
@@ -28,6 +29,11 @@ type bstree struct {
 	left       *bstree
 	right      *bstree
 	parent     *bstree
+	length     int
+}
+
+func (t *bstree) Length() int {
+	return t.length
 }
 
 func (t *bstree) Parent() BStree {

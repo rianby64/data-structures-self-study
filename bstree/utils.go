@@ -3,6 +3,7 @@ package bstree
 import "github.com/rianby64/data-structures-self-study/list"
 
 func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
+	t.length++
 	if t.payload == nil {
 		t.SetValue(v)
 		return t
