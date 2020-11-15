@@ -23,6 +23,24 @@ func checkExpected(ll list.List, expected []int, t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
+func Test_tree_inorder_comparator_nil(t *testing.T) {
+	btree := New(nil)
+
+	n1 := btree.Insert(33)
+	n2 := btree.Insert(44)
+	n3 := btree.Insert(55)
+
+	expectedNodes := []BStree{n1, n2, n3}
+	l := btree.Inorder()
+
+	i := 0
+	for curr := l.Next(); curr != nil; curr = curr.Next() {
+		expectedNode := expectedNodes[i]
+		i++
+		assert.Equal(t, expectedNode.Value(), curr.Value())
+	}
+}
+
 func Test_tree_inorder_empty(t *testing.T) {
 	btree := New(nil)
 

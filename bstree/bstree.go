@@ -76,18 +76,15 @@ func insert(t *bstree, v interface{}, c comparator) BStree {
 				comparator: c,
 			}
 		}
-		insert(t.left, v, c)
-	} else {
-		if t.right == nil {
-			t.right = &bstree{
-				root:       t.root,
-				comparator: c,
-			}
-		}
-		insert(t.right, v, c)
+		return insert(t.left, v, c)
 	}
-
-	return t
+	if t.right == nil {
+		t.right = &bstree{
+			root:       t.root,
+			comparator: c,
+		}
+	}
+	return insert(t.right, v, c)
 }
 
 func (t *bstree) Insert(v interface{}) BStree {
@@ -100,6 +97,13 @@ func (t *bstree) Insert(v interface{}) BStree {
 func New(c comparator) BStree {
 	t := &bstree{}
 	t.root = t
-	t.comparator = c
+	t.comparator = func(a, b interface{}) bool {
+		if c == nil {
+			return false
+		}
+
+		return c(a, b)
+	}
+
 	return t
 }
