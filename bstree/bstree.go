@@ -14,6 +14,10 @@ type BStree interface {
 	Insert(v interface{}) BStree
 	Inorder() list.List
 
+	Parent() BStree
+	Left() BStree
+	Right() BStree
+
 	Find(value interface{}, comparator comparator) BStree
 }
 
@@ -23,6 +27,17 @@ type bstree struct {
 	root       *bstree
 	left       *bstree
 	right      *bstree
+	parent     *bstree
+}
+
+func (t *bstree) Parent() BStree {
+	return t.parent
+}
+func (t *bstree) Left() BStree {
+	return t.left
+}
+func (t *bstree) Right() BStree {
+	return t.right
 }
 
 func find(a interface{}, t *bstree, matcher, comparator comparator) BStree {
@@ -105,6 +120,7 @@ func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
 			t.left = &bstree{
 				root:       t.root,
 				comparator: c,
+				parent:     t,
 			}
 		}
 		return insert(t.left, v, c)
@@ -113,6 +129,7 @@ func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
 		t.right = &bstree{
 			root:       t.root,
 			comparator: c,
+			parent:     t,
 		}
 	}
 	return insert(t.right, v, c)
@@ -128,6 +145,7 @@ func (t *bstree) Insert(v interface{}) BStree {
 func New(comparator func(a, b interface{}) bool) BStree {
 	t := &bstree{}
 	t.root = t
+	t.parent = nil
 	t.comparator = func(a, b interface{}) bool {
 		if comparator == nil {
 			return false

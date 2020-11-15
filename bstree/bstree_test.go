@@ -46,6 +46,9 @@ func Test_tree_inorder_empty(t *testing.T) {
 
 	l := btree.Inorder()
 	assert.Zero(t, l.Length())
+	assert.Nil(t, btree.Parent())
+	assert.Nil(t, btree.Left())
+	assert.Nil(t, btree.Right())
 }
 
 func Test_tree_case_inorder(t *testing.T) {
@@ -74,12 +77,18 @@ func Test_tree_case_inorder_chain(t *testing.T) {
 	}
 	btree := New(c)
 
-	btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(60).Insert(80)
+	item := btree.Insert(50).Insert(30)
+	btree.Insert(20).Insert(40).Insert(70).Insert(60).Insert(80)
 
 	expected := []int{20, 30, 40, 50, 60, 70, 80}
 
 	l := btree.Inorder()
 	checkExpected(l, expected, t)
+
+	assert.Equal(t, item.Value(), 30)
+	assert.Equal(t, item.Parent().Value(), 50)
+	assert.Equal(t, item.Left().Value(), 20)
+	assert.Equal(t, item.Right().Value(), 40)
 }
 
 func Test_tree_search_ok_middle_case_1(t *testing.T) {
