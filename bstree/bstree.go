@@ -11,7 +11,7 @@ type comparator func(a, b interface{}) bool
 // BStree stands for Binary Search Tree interface
 type BStree interface {
 	cell.Cell
-	Insert(v interface{})
+	Insert(v interface{}) BStree
 	Inorder() list.List
 }
 
@@ -38,7 +38,8 @@ func (t *bstree) SetValue(v interface{}) {
 }
 
 func inorder(root *bstree, l list.List) {
-	if root == nil {
+	// la condicion || (root.root == root && root.Value() == nil) es por falta de sentinela
+	if root == nil || (root.root == root && root.Value() == nil) {
 		return
 	}
 
@@ -62,10 +63,10 @@ func (t *bstree) Inorder() list.List {
 	return list
 }
 
-func insert(t *bstree, v interface{}, c comparator) {
+func insert(t *bstree, v interface{}, c comparator) BStree {
 	if t.payload == nil {
 		t.SetValue(v)
-		return
+		return t
 	}
 
 	if c(t.payload.Value(), v) {
@@ -85,12 +86,14 @@ func insert(t *bstree, v interface{}, c comparator) {
 		}
 		insert(t.right, v, c)
 	}
+
+	return t
 }
 
-func (t *bstree) Insert(v interface{}) {
+func (t *bstree) Insert(v interface{}) BStree {
 	root := t.root
 
-	insert(root, v, root.comparator)
+	return insert(root, v, root.comparator)
 }
 
 // New constructor
