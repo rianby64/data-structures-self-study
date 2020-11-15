@@ -20,6 +20,7 @@ type BStree interface {
 	Right() BStree
 
 	Find(value interface{}, comparator comparator) BStree
+	Delete()
 }
 
 type bstree struct {
@@ -30,6 +31,21 @@ type bstree struct {
 	right      *bstree
 	parent     *bstree
 	length     int
+}
+
+func (t *bstree) Delete() {
+
+	// case 1: t.left == nil && t.right == nil -> leaf
+	if t.left == nil && t.right == nil {
+		parent := t.parent
+		if parent.left == t {
+			parent.left = nil
+			return
+		}
+		if parent.right == t {
+			parent.right = nil
+		}
+	}
 }
 
 func (t *bstree) Length() int {

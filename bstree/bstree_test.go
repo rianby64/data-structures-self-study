@@ -258,3 +258,20 @@ func Test_tree_search_nil(t *testing.T) {
 
 	assert.Equal(t, nil, actual)
 }
+
+func Test_tree_delete_case1(t *testing.T) {
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
+
+	expected := []int{20, 30, 40, 50, 60, 70}
+	last := btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(60).Insert(80)
+
+	last.Delete()
+
+	l := btree.Inorder()
+	checkExpected(l, expected, t)
+}
