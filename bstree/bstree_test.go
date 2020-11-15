@@ -83,7 +83,6 @@ func Test_tree_case_inorder_chain(t *testing.T) {
 }
 
 func Test_tree_search_ok_middle_case_1(t *testing.T) {
-
 	c := func(a, b interface{}) bool {
 		na := a.(int)
 		nb := b.(int)
@@ -105,7 +104,6 @@ func Test_tree_search_ok_middle_case_1(t *testing.T) {
 }
 
 func Test_tree_search_ok_middle_case_2(t *testing.T) {
-
 	c := func(a, b interface{}) bool {
 		na := a.(int)
 		nb := b.(int)
@@ -127,7 +125,6 @@ func Test_tree_search_ok_middle_case_2(t *testing.T) {
 }
 
 func Test_tree_search_ok_first(t *testing.T) {
-
 	c := func(a, b interface{}) bool {
 		na := a.(int)
 		nb := b.(int)
@@ -149,7 +146,6 @@ func Test_tree_search_ok_first(t *testing.T) {
 }
 
 func Test_tree_search_ok_last(t *testing.T) {
-
 	c := func(a, b interface{}) bool {
 		na := a.(int)
 		nb := b.(int)
@@ -170,5 +166,21 @@ func Test_tree_search_ok_last(t *testing.T) {
 }
 
 func Test_tree_search_nil(t *testing.T) {
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
 
+	btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(60).Insert(80)
+
+	actual := btree.Find(100, func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+
+		return na == nb
+	})
+
+	assert.Equal(t, nil, actual)
 }
