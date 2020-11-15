@@ -91,6 +91,21 @@ func Test_tree_case_inorder_chain(t *testing.T) {
 	assert.Equal(t, item.Right().Value(), 40)
 }
 
+func Test_tree_search_comparator_nil(t *testing.T) {
+	c := func(a, b interface{}) bool {
+		na := a.(int)
+		nb := b.(int)
+		return na >= nb
+	}
+	btree := New(c)
+
+	btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(60).Insert(80)
+
+	actual := btree.Find(30, nil)
+
+	assert.Nil(t, actual)
+}
+
 func Test_tree_search_ok_middle_case_1(t *testing.T) {
 	c := func(a, b interface{}) bool {
 		na := a.(int)
