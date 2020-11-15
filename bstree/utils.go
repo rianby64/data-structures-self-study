@@ -9,22 +9,20 @@ func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
 		return t
 	}
 
+	node := &bstree{
+		root:       t.root,
+		comparator: c,
+		parent:     t,
+	}
+
 	if c(t.payload.Value(), v) {
 		if t.left == nil {
-			t.left = &bstree{
-				root:       t.root,
-				comparator: c,
-				parent:     t,
-			}
+			t.left = node
 		}
 		return insert(t.left, v, c)
 	}
 	if t.right == nil {
-		t.right = &bstree{
-			root:       t.root,
-			comparator: c,
-			parent:     t,
-		}
+		t.right = node
 	}
 	return insert(t.right, v, c)
 }
