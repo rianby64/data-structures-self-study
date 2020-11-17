@@ -27,6 +27,23 @@ func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
 	return insert(t.right, v, c)
 }
 
+func insertNode(t *bstree, node *bstree, c func(a, b interface{}) bool) BStree {
+	t.length += node.Length()
+
+	if c(t.payload.Value(), node.Value()) {
+		if t.left == nil {
+			t.left = node
+			return node
+		}
+		return insert(t.left, node, c)
+	}
+	if t.right == nil {
+		t.right = node
+		return node
+	}
+	return insert(t.right, node, c)
+}
+
 func find(a interface{}, t *bstree, matcher, comparator comparator) BStree {
 	if matcher(a, t.Value()) {
 		return t
