@@ -11,6 +11,7 @@ type comparator func(a, b interface{}) bool
 // BStree stands for Binary Search Tree interface
 type BStree interface {
 	cell.Cell
+	GetNode() *bstree
 	Insert(v interface{}) BStree
 	Inorder() list.List
 
@@ -46,6 +47,10 @@ func (t *bstree) Delete() {
 			parent.right = nil
 		}
 	}
+}
+
+func (t *bstree) GetNode() *bstree {
+	return t
 }
 
 func (t *bstree) Length() int {
