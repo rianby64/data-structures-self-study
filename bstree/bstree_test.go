@@ -216,7 +216,7 @@ func Test_tree_search_insert_node_empty(t *testing.T) {
 
 	expected := []int{20, 30, 40, 50, 70, 80}
 
-	insertNode(btree.GetNode(), node.GetNode(), corder)
+	insertNode(btree, node, corder)
 
 	l := btree.Inorder()
 	checkExpected(l, expected, t)
@@ -231,7 +231,7 @@ func Test_tree_search_insert_node1(t *testing.T) {
 
 	expected := []int{20, 30, 40, 50, 60, 70, 80}
 
-	insertNode(btree.GetNode(), node.GetNode(), corder)
+	insertNode(btree, node, corder)
 
 	l := btree.Inorder()
 	checkExpected(l, expected, t)
@@ -246,7 +246,7 @@ func Test_tree_search_insert_node2(t *testing.T) {
 
 	expected := []int{20, 30, 40, 50, 55, 60, 65, 70, 80}
 
-	insertNode(btree.GetNode(), node.GetNode(), corder)
+	insertNode(btree, node, corder)
 
 	btreeExpected := New(corder)
 	btreeExpected.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(80).Insert(60).Insert(65).Insert(55)
@@ -257,3 +257,23 @@ func Test_tree_search_insert_node2(t *testing.T) {
 	lexpected := btreeExpected.Inorder()
 	checkExpected(lexpected, expected, t)
 }
+
+/*
+func Test_tree_search_insert_node3(t *testing.T) {
+	btree := New(corder)
+
+	btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(80).Insert(60).Insert(65).Insert(71)
+
+	expected := []int{20, 30, 40, 50, 60, 65, 70, 71, 80}
+
+	l := btree.Inorder()
+	checkExpected(l, expected, t)
+
+	expectedLenghts := []int{9, 3, 1, 1, 5, 2, 2, 1, 1}
+	for i, expectedLength := range expectedLenghts {
+		assert.Equal(t, expectedLength, actualNodes[i].Length(), i)
+	}
+
+	assert.Equal(t, 9, btree.Length())
+}
+*/

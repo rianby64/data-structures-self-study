@@ -27,24 +27,39 @@ func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
 	return insert(t.right, v, c)
 }
 
-func insertNode(t *bstree, node *bstree, c func(a, b interface{}) bool) BStree {
-	v := node.Value()
-	if v == nil {
+func castTobtree(b BStree) (*bstree, bool) {
+	casted, ok := b.(*bstree)
+	return casted, ok
+}
+
+func insertNode(t BStree, node BStree, c func(a, b interface{}) bool) BStree {
+	ct, ok := castTobtree(t)
+	if !ok {
+		return t
+	}
+	cnode, ok := castTobtree(node)
+	if !ok {
 		return t
 	}
 
-	if c(t.payload.Value(), v) {
-		if t.left == nil {
-			t.left = node
+	v := node.Value()
+
+	if v == nil {
+		return ct
+	}
+
+	if c(ct.payload.Value(), v) {
+		if ct.left == nil {
+			ct.left = cnode
 			return node
 		}
-		return insertNode(t.left, node, c)
+		return insertNode(ct.left, node, c)
 	}
-	if t.right == nil {
-		t.right = node
+	if ct.right == nil {
+		ct.right = cnode
 		return node
 	}
-	return insertNode(t.right, node, c)
+	return insertNode(ct.right, node, c)
 }
 
 func find(a interface{}, t *bstree, matcher, comparator comparator) BStree {
