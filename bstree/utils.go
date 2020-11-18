@@ -6,6 +6,7 @@ func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
 	t.length++
 	if t.payload == nil {
 		t.SetValue(v)
+
 		return t
 	}
 
@@ -19,12 +20,31 @@ func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
 		if t.left == nil {
 			t.left = node
 		}
+
 		return insert(t.left, v, c)
 	}
 	if t.right == nil {
 		t.right = node
 	}
+
 	return insert(t.right, v, c)
+}
+
+func delete(t, parent *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
+
+	// case 1: t.left == nil && t.right == nil -> leaf
+	if t.left == nil && t.right == nil {
+		if parent.left == t {
+			parent.left = nil
+		}
+		if parent.right == t {
+			parent.right = nil
+		}
+
+		return parent
+	}
+
+	return nil
 }
 
 func castTobtree(b BStree) (*bstree, bool) {
@@ -37,13 +57,13 @@ func insertNode(t BStree, node BStree, c func(a, b interface{}) bool) BStree {
 	if !ok {
 		return t
 	}
+
 	cnode, ok := castTobtree(node)
 	if !ok {
 		return t
 	}
 
 	v := node.Value()
-
 	if v == nil {
 		return ct
 	}
@@ -51,14 +71,19 @@ func insertNode(t BStree, node BStree, c func(a, b interface{}) bool) BStree {
 	if c(ct.payload.Value(), v) {
 		if ct.left == nil {
 			ct.left = cnode
+
 			return node
 		}
+
 		return insertNode(ct.left, node, c)
 	}
+
 	if ct.right == nil {
 		ct.right = cnode
+
 		return node
 	}
+
 	return insertNode(ct.right, node, c)
 }
 
@@ -81,6 +106,18 @@ func find(a interface{}, t *bstree, matcher, comparator comparator) BStree {
 	}
 
 	return nil
+}
+
+func findmax(t BStree) BStree {
+	right := t.Right()
+	if right != nil {
+		return findmax(right)
+	}
+	left := t.Left()
+	if left != nil {
+		return findmax(left)
+	}
+	return t
 }
 
 func inorder(root *bstree, l list.List) {

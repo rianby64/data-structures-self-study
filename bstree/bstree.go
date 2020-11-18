@@ -12,15 +12,15 @@ type comparator func(a, b interface{}) bool
 type BStree interface {
 	cell.Cell
 	Insert(v interface{}) BStree
-	Inorder() list.List
+	Delete() BStree
 
+	Inorder() list.List
 	Length() int
 	Parent() BStree
 	Left() BStree
 	Right() BStree
 
 	Find(value interface{}, comparator comparator) BStree
-	Delete()
 }
 
 type bstree struct {
@@ -33,19 +33,9 @@ type bstree struct {
 	length     int
 }
 
-func (t *bstree) Delete() {
-
-	// case 1: t.left == nil && t.right == nil -> leaf
-	if t.left == nil && t.right == nil {
-		parent := t.parent
-		if parent.left == t {
-			parent.left = nil
-			return
-		}
-		if parent.right == t {
-			parent.right = nil
-		}
-	}
+func (t *bstree) Delete() BStree {
+	parent := t.parent
+	return delete(t, parent, t.Value(), t.comparator)
 }
 
 func (t *bstree) Length() int {
@@ -53,12 +43,21 @@ func (t *bstree) Length() int {
 }
 
 func (t *bstree) Parent() BStree {
+	if t.parent == nil {
+		return nil
+	}
 	return t.parent
 }
 func (t *bstree) Left() BStree {
+	if t.left == nil {
+		return nil
+	}
 	return t.left
 }
 func (t *bstree) Right() BStree {
+	if t.right == nil {
+		return nil
+	}
 	return t.right
 }
 
