@@ -35,6 +35,7 @@ type bstree struct {
 
 func (t *bstree) Delete() BStree {
 	if t.left == nil && t.right == nil && t.parent == nil {
+		t.payload = nil
 		return nil
 	}
 	return delete(t, t.parent)

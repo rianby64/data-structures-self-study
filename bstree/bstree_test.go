@@ -358,6 +358,45 @@ func Test_tree_delete_case_4(t *testing.T) {
 		lexpected := btreeExpected.Inorder()
 		checkExpected(lexpected, expected, t)
 	}
+
+	{
+		expected := []int{20, 30}
+
+		btreeExpected := New(corder)
+		btreeExpected.Insert(30).Insert(20)
+
+		deleted = deleted.Delete()
+		assert.Equal(t, 30, deleted.Value())
+
+		l := btree.Inorder()
+		checkExpected(l, expected, t)
+
+		lexpected := btreeExpected.Inorder()
+		checkExpected(lexpected, expected, t)
+	}
+
+	{
+		expected := []int{20}
+
+		btreeExpected := New(corder)
+		btreeExpected.Insert(20)
+
+		deleted = deleted.Delete()
+		assert.Equal(t, 20, deleted.Value())
+
+		l := btree.Inorder()
+		checkExpected(l, expected, t)
+
+		lexpected := btreeExpected.Inorder()
+		checkExpected(lexpected, expected, t)
+	}
+
+	{
+		deleted = deleted.Delete()
+		assert.Nil(t, deleted)
+
+		assert.Nil(t, btree.Value())
+	}
 }
 
 func Test_tree_findmax_case_1(t *testing.T) {
@@ -397,23 +436,3 @@ func Test_tree_findmax_emtpy_tree(t *testing.T) {
 	max := findmax(cbtree)
 	assert.Nil(t, max.Value())
 }
-
-/*
-func Test_tree_insert_node3(t *testing.T) {
-	btree := New(corder)
-
-	btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(80).Insert(60).Insert(65).Insert(71)
-
-	expected := []int{20, 30, 40, 50, 60, 65, 70, 71, 80}
-
-	l := btree.Inorder()
-	checkExpected(l, expected, t)
-
-	expectedLenghts := []int{9, 3, 1, 1, 5, 2, 2, 1, 1}
-	for i, expectedLength := range expectedLenghts {
-		assert.Equal(t, expectedLength, actualNodes[i].Length(), i)
-	}
-
-	assert.Equal(t, 9, btree.Length())
-}
-*/
