@@ -7,6 +7,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func castTobtree(b BStree) (*bstree, bool) {
+	casted, ok := b.(*bstree)
+	return casted, ok
+}
+
 func corder(a, b interface{}) bool {
 	na := a.(int)
 	nb := b.(int)
@@ -253,54 +258,106 @@ func Test_tree_delete_case_3(t *testing.T) {
 	checkExpected(lexpected, expected, t)
 }
 
-func Test_tree_insert_node_empty(t *testing.T) {
+func Test_tree_delete_case_4(t *testing.T) {
 	btree := New(corder)
-	node := New(corder)
+	deleted := btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70)
+	btree.Insert(80).Insert(60).Insert(65).Insert(55)
 
-	btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(80)
+	{
+		expected := []int{20, 30, 40, 50, 55, 60, 65, 80}
 
-	expected := []int{20, 30, 40, 50, 70, 80}
+		btreeExpected := New(corder)
+		btreeExpected.Insert(50).Insert(20).Insert(30).Insert(40).Insert(65).Insert(80).Insert(60).Insert(55)
 
-	insertNode(btree, node, corder)
+		deleted = deleted.Delete()
+		assert.Equal(t, 65, deleted.Value())
 
-	l := btree.Inorder()
-	checkExpected(l, expected, t)
-}
+		l := btree.Inorder()
+		checkExpected(l, expected, t)
 
-func Test_tree_insert_node1(t *testing.T) {
-	btree := New(corder)
-	node := New(corder)
+		lexpected := btreeExpected.Inorder()
+		checkExpected(lexpected, expected, t)
+	}
 
-	btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(80)
-	node.Insert(60)
+	{
+		expected := []int{20, 30, 40, 50, 55, 60, 80}
 
-	expected := []int{20, 30, 40, 50, 60, 70, 80}
+		btreeExpected := New(corder)
+		btreeExpected.Insert(50).Insert(20).Insert(30).Insert(40).Insert(60).Insert(80).Insert(55)
 
-	insertNode(btree, node, corder)
+		deleted = deleted.Delete()
+		assert.Equal(t, 60, deleted.Value())
 
-	l := btree.Inorder()
-	checkExpected(l, expected, t)
-}
+		l := btree.Inorder()
+		checkExpected(l, expected, t)
 
-func Test_tree_insert_node2(t *testing.T) {
-	btree := New(corder)
-	btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(80)
+		lexpected := btreeExpected.Inorder()
+		checkExpected(lexpected, expected, t)
+	}
 
-	node := New(corder)
-	node.Insert(60).Insert(65).Insert(55)
+	{
+		expected := []int{20, 30, 40, 50, 55, 80}
 
-	expected := []int{20, 30, 40, 50, 55, 60, 65, 70, 80}
+		btreeExpected := New(corder)
+		btreeExpected.Insert(50).Insert(20).Insert(30).Insert(40).Insert(55).Insert(80)
 
-	insertNode(btree, node, corder)
+		deleted = deleted.Delete()
+		assert.Equal(t, 55, deleted.Value())
 
-	btreeExpected := New(corder)
-	btreeExpected.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(80).Insert(60).Insert(65).Insert(55)
+		l := btree.Inorder()
+		checkExpected(l, expected, t)
 
-	l := btree.Inorder()
-	checkExpected(l, expected, t)
+		lexpected := btreeExpected.Inorder()
+		checkExpected(lexpected, expected, t)
+	}
 
-	lexpected := btreeExpected.Inorder()
-	checkExpected(lexpected, expected, t)
+	{
+		expected := []int{20, 30, 40, 50, 80}
+
+		btreeExpected := New(corder)
+		btreeExpected.Insert(50).Insert(20).Insert(30).Insert(40).Insert(80)
+
+		deleted = deleted.Delete()
+		assert.Equal(t, 80, deleted.Value())
+
+		l := btree.Inorder()
+		checkExpected(l, expected, t)
+
+		lexpected := btreeExpected.Inorder()
+		checkExpected(lexpected, expected, t)
+	}
+
+	{
+		expected := []int{20, 30, 40, 50}
+
+		btreeExpected := New(corder)
+		btreeExpected.Insert(50).Insert(20).Insert(30).Insert(40)
+
+		deleted = deleted.Delete()
+		assert.Equal(t, 50, deleted.Value())
+
+		l := btree.Inorder()
+		checkExpected(l, expected, t)
+
+		lexpected := btreeExpected.Inorder()
+		checkExpected(lexpected, expected, t)
+	}
+
+	{
+		expected := []int{20, 30, 40}
+
+		btreeExpected := New(corder)
+		btreeExpected.Insert(30).Insert(20).Insert(40)
+
+		deleted = deleted.Delete()
+		assert.Equal(t, 40, deleted.Value())
+
+		l := btree.Inorder()
+		checkExpected(l, expected, t)
+
+		lexpected := btreeExpected.Inorder()
+		checkExpected(lexpected, expected, t)
+	}
 }
 
 func Test_tree_findmax_case_1(t *testing.T) {
@@ -340,3 +397,23 @@ func Test_tree_findmax_emtpy_tree(t *testing.T) {
 	max := findmax(cbtree)
 	assert.Nil(t, max.Value())
 }
+
+/*
+func Test_tree_insert_node3(t *testing.T) {
+	btree := New(corder)
+
+	btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70).Insert(80).Insert(60).Insert(65).Insert(71)
+
+	expected := []int{20, 30, 40, 50, 60, 65, 70, 71, 80}
+
+	l := btree.Inorder()
+	checkExpected(l, expected, t)
+
+	expectedLenghts := []int{9, 3, 1, 1, 5, 2, 2, 1, 1}
+	for i, expectedLength := range expectedLenghts {
+		assert.Equal(t, expectedLength, actualNodes[i].Length(), i)
+	}
+
+	assert.Equal(t, 9, btree.Length())
+}
+*/

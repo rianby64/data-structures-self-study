@@ -51,7 +51,7 @@ func delete(t, parent *bstree) BStree {
 		if maxleft != nil {
 			t.payload = maxleft.payload
 			delete(maxleft, maxleft.parent)
-			return parent
+			return t
 		}
 	}
 
@@ -61,51 +61,11 @@ func delete(t, parent *bstree) BStree {
 		if maxright != nil {
 			t.payload = maxright.payload
 			delete(maxright, maxright.parent)
-			return parent
+			return t
 		}
 	}
 
-	return parent
-}
-
-func castTobtree(b BStree) (*bstree, bool) {
-	casted, ok := b.(*bstree)
-	return casted, ok
-}
-
-func insertNode(t BStree, node BStree, c func(a, b interface{}) bool) BStree {
-	ct, ok := castTobtree(t)
-	if !ok {
-		return t
-	}
-
-	cnode, ok := castTobtree(node)
-	if !ok {
-		return t
-	}
-
-	v := node.Value()
-	if v == nil {
-		return ct
-	}
-
-	if c(ct.payload.Value(), v) {
-		if ct.left == nil {
-			ct.left = cnode
-
-			return node
-		}
-
-		return insertNode(ct.left, node, c)
-	}
-
-	if ct.right == nil {
-		ct.right = cnode
-
-		return node
-	}
-
-	return insertNode(ct.right, node, c)
+	return nil
 }
 
 func find(a interface{}, t *bstree, matcher comparator) BStree {
@@ -133,11 +93,6 @@ func findmax(t *bstree) *bstree {
 	right := t.right
 	if right != nil {
 		return findmax(right)
-	}
-
-	left := t.left
-	if left != nil && right != nil {
-		return findmax(left)
 	}
 
 	return t
