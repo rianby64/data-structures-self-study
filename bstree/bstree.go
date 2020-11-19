@@ -34,8 +34,7 @@ type bstree struct {
 }
 
 func (t *bstree) Delete() BStree {
-	parent := t.parent
-	return delete(t, parent, t.Value(), t.comparator)
+	return delete(t, t.parent)
 }
 
 func (t *bstree) Length() int {
@@ -66,7 +65,7 @@ func (t *bstree) Find(value interface{}, matcher comparator) BStree {
 		return nil
 	}
 
-	return find(value, t, matcher, t.comparator)
+	return find(value, t, matcher)
 }
 
 func (t *bstree) Value() interface{} {

@@ -30,9 +30,8 @@ func insert(t *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
 	return insert(t.right, v, c)
 }
 
-func delete(t, parent *bstree, v interface{}, c func(a, b interface{}) bool) BStree {
-
-	// case 1: t.left == nil && t.right == nil -> leaf
+func delete(t, parent *bstree) BStree {
+	// case when: t.left == nil && t.right == nil -> leaf
 	if t.left == nil && t.right == nil {
 		if parent.left == t {
 			parent.left = nil
@@ -44,7 +43,29 @@ func delete(t, parent *bstree, v interface{}, c func(a, b interface{}) bool) BSt
 		return parent
 	}
 
-	return nil
+	// case else:
+
+	// find max on left
+	if t.left != nil {
+		maxleft := findmax(t.left)
+		if maxleft != nil {
+			t.payload = maxleft.payload
+			delete(maxleft, maxleft.parent)
+			return parent
+		}
+	}
+
+	// find max on right
+	if t.right != nil {
+		maxright := findmax(t.right)
+		if maxright != nil {
+			t.payload = maxright.payload
+			delete(maxright, maxright.parent)
+			return parent
+		}
+	}
+
+	return parent
 }
 
 func castTobtree(b BStree) (*bstree, bool) {
@@ -87,14 +108,14 @@ func insertNode(t BStree, node BStree, c func(a, b interface{}) bool) BStree {
 	return insertNode(ct.right, node, c)
 }
 
-func find(a interface{}, t *bstree, matcher, comparator comparator) BStree {
+func find(a interface{}, t *bstree, matcher comparator) BStree {
 	if matcher(a, t.Value()) {
 		return t
 	}
 
 	if t.left != nil {
 		if t.comparator(a, t.left.Value()) {
-			found := find(a, t.left, matcher, comparator)
+			found := find(a, t.left, matcher)
 			if found != nil {
 				return found
 			}
@@ -102,21 +123,23 @@ func find(a interface{}, t *bstree, matcher, comparator comparator) BStree {
 	}
 
 	if t.right != nil {
-		return find(a, t.right, matcher, comparator)
+		return find(a, t.right, matcher)
 	}
 
 	return nil
 }
 
-func findmax(t BStree) BStree {
-	right := t.Right()
+func findmax(t *bstree) *bstree {
+	right := t.right
 	if right != nil {
 		return findmax(right)
 	}
-	left := t.Left()
-	if left != nil {
+
+	left := t.left
+	if left != nil && right != nil {
 		return findmax(left)
 	}
+
 	return t
 }
 

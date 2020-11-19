@@ -208,6 +208,44 @@ func Test_tree_delete_case_1(t *testing.T) {
 	checkExpected(l, expected, t)
 }
 
+func Test_tree_delete_case_2(t *testing.T) {
+	btree := New(corder)
+	toDelete := btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70)
+	btree.Insert(80).Insert(60).Insert(65).Insert(55)
+
+	expected := []int{20, 30, 40, 50, 55, 60, 65, 80}
+
+	btreeExpected := New(corder)
+	btreeExpected.Insert(50).Insert(30).Insert(20).Insert(40).Insert(65).Insert(80).Insert(60).Insert(55)
+
+	toDelete.Delete()
+
+	l := btree.Inorder()
+	checkExpected(l, expected, t)
+
+	lexpected := btreeExpected.Inorder()
+	checkExpected(lexpected, expected, t)
+}
+
+func Test_tree_delete_case_3(t *testing.T) {
+	btree := New(corder)
+	toDelete := btree.Insert(50)
+	btree.Insert(30).Insert(20).Insert(40).Insert(70).Insert(80).Insert(60).Insert(65).Insert(55)
+
+	expected := []int{20, 30, 40, 55, 60, 65, 70, 80}
+
+	btreeExpected := New(corder)
+	btreeExpected.Insert(20).Insert(30).Insert(40).Insert(70).Insert(80).Insert(60).Insert(65).Insert(55)
+
+	toDelete.Delete()
+
+	l := btree.Inorder()
+	checkExpected(l, expected, t)
+
+	lexpected := btreeExpected.Inorder()
+	checkExpected(lexpected, expected, t)
+}
+
 func Test_tree_insert_node_empty(t *testing.T) {
 	btree := New(corder)
 	node := New(corder)
@@ -261,20 +299,37 @@ func Test_tree_insert_node2(t *testing.T) {
 func Test_tree_findmax_case_1(t *testing.T) {
 	btree := New(corder)
 
-	btree.Insert(50).Insert(40).Insert(70).Insert(80).Insert(30).Insert(20)
+	btree.Insert(50).Insert(30).Insert(40).Insert(70).Insert(80).Insert(20)
 
 	expected := []int{20, 30, 40, 50, 70, 80}
 
 	l := btree.Inorder()
 	checkExpected(l, expected, t)
 
-	max := findmax(btree)
+	cbtree, _ := castTobtree(btree)
+	max := findmax(cbtree)
 	assert.Equal(t, 80, max.Value())
+}
+
+func Test_tree_findmax_case_2(t *testing.T) {
+	btree := New(corder)
+
+	btree.Insert(50).Insert(30).Insert(40).Insert(70).Insert(20).Insert(60).Insert(55).Insert(65)
+
+	expected := []int{20, 30, 40, 50, 55, 60, 65, 70}
+
+	l := btree.Inorder()
+	checkExpected(l, expected, t)
+
+	cbtree, _ := castTobtree(btree)
+	max := findmax(cbtree)
+	assert.Equal(t, 70, max.Value())
 }
 
 func Test_tree_findmax_emtpy_tree(t *testing.T) {
 	btree := New(corder)
 
-	max := findmax(btree)
+	cbtree, _ := castTobtree(btree)
+	max := findmax(cbtree)
 	assert.Nil(t, max.Value())
 }
