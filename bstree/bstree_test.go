@@ -196,6 +196,13 @@ func Test_tree_search_nil(t *testing.T) {
 	assert.Equal(t, nil, actual)
 }
 
+func Test_tree_delete_emtpy(t *testing.T) {
+	btree := New(corder)
+
+	deleted := btree.Delete()
+	assert.Nil(t, deleted)
+}
+
 func Test_tree_delete_case_1(t *testing.T) {
 	btree := New(corder)
 
