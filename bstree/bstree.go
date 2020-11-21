@@ -80,10 +80,6 @@ func (t *bstree) Value() interface{} {
 }
 
 func (t *bstree) SetValue(v interface{}) {
-	if t.payload != nil {
-		t.payload.SetValue(v)
-	}
-	t.payload = cell.New(v)
 }
 
 func (t *bstree) Inorder() list.List {
