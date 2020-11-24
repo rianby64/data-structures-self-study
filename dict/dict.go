@@ -90,13 +90,13 @@ func (l *level) insert(key byte, value interface{}) {
 
 	if key > l.max {
 		l.changed = true
-		l.payload = append(l.payload, cell{key: key})
+		l.payload = append(l.payload, cell{key: key, value: value})
 		return
 	}
 
 	if key < l.min {
 		l.changed = true
-		l.payload = append([]cell{{key: key}}, l.payload...)
+		l.payload = append([]cell{{key: key, value: value}}, l.payload...)
 		return
 	}
 
@@ -113,7 +113,7 @@ func (l *level) insert(key byte, value interface{}) {
 		}
 
 		if v.key > key && !added {
-			newpayload = append(newpayload, cell{key: key})
+			newpayload = append(newpayload, cell{key: key, value: value})
 			added = true
 		}
 		newpayload = append(newpayload, v)
