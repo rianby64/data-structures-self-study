@@ -9,12 +9,17 @@ type dict struct {
 	parent  *dict
 }
 
+type cell struct {
+	key   byte
+	value interface{}
+}
+
 type level struct {
 	changed bool
 	min     byte
 	max     byte
 	len     int
-	payload []byte
+	payload []cell
 }
 
 func (l *level) getIndex(b byte) (int, bool) {
@@ -45,12 +50,12 @@ func (l *level) getIndex(b byte) (int, bool) {
 	}
 
 	actual := l.payload[index]
-	if actual == b {
+	if actual.key == b {
 		return index, true
 	}
 
-	if actual < b {
-		for actual != b {
+	if actual.key < b {
+		for actual.key != b {
 			index++
 			if index >= l.len {
 				return -1, false
@@ -60,7 +65,7 @@ func (l *level) getIndex(b byte) (int, bool) {
 		return index, true
 	}
 
-	for actual != b {
+	for actual.key != b {
 		index--
 		if index < 0 {
 			return -1, false
@@ -75,40 +80,40 @@ func (l *level) updateEdges() {
 		return
 	}
 	l.len = len(l.payload)
-	l.min = l.payload[0]
-	l.max = l.payload[l.len-1]
+	l.min = l.payload[0].key
+	l.max = l.payload[l.len-1].key
 	l.changed = false
 }
 
-func (l *level) insert(b byte) {
+func (l *level) insert(key byte, value interface{}) {
 	defer l.updateEdges()
 
-	if b > l.max {
+	if key > l.max {
 		l.changed = true
-		l.payload = append(l.payload, b)
+		l.payload = append(l.payload, cell{key: key})
 		return
 	}
 
-	if b < l.min {
+	if key < l.min {
 		l.changed = true
-		l.payload = append([]byte{b}, l.payload...)
+		l.payload = append([]cell{{key: key}}, l.payload...)
 		return
 	}
 
-	if b == l.max || b == l.min {
+	if key == l.max || key == l.min {
 		return
 	}
 
-	newpayload := []byte{}
+	newpayload := []cell{}
 	added := false
 
 	for _, v := range l.payload {
-		if v == b {
+		if v.key == key {
 			return
 		}
 
-		if v > b && !added {
-			newpayload = append(newpayload, b)
+		if v.key > key && !added {
+			newpayload = append(newpayload, cell{key: key})
 			added = true
 		}
 		newpayload = append(newpayload, v)
@@ -118,15 +123,19 @@ func (l *level) insert(b byte) {
 	l.payload = newpayload
 }
 
-func (l *level) delete(b byte) {
+func (l *level) delete(key byte) {
+	if key < l.min || key > l.max {
+		return
+	}
+
 	defer l.updateEdges()
 
-	newpayload := []byte{}
+	newpayload := []cell{}
 	changed := false
 
 	for i := 0; i < l.len; i++ {
 		v := l.payload[i]
-		if v == b {
+		if v.key == key {
 			changed = true
 			continue
 		}
@@ -138,14 +147,30 @@ func (l *level) delete(b byte) {
 	l.payload = newpayload
 }
 
-func (l *level) String() string {
-	return string(l.payload)
+func (l *level) getkeys() string {
+	s := ""
+
+	for _, v := range l.payload {
+		s = s + string(v.key)
+	}
+
+	return s
+}
+
+func (l *level) getvalues() interface{} {
+	s := []interface{}{}
+
+	for _, v := range l.payload {
+		s = append(s, v.value)
+	}
+
+	return s
 }
 
 // newLevel
 func newLevel() *level {
 	return &level{
-		payload: []byte{},
+		payload: []cell{},
 	}
 }
 
