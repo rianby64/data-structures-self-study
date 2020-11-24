@@ -10,6 +10,7 @@ type dict struct {
 }
 
 type level struct {
+	changed bool
 	min     byte
 	max     byte
 	len     int
@@ -19,6 +20,14 @@ type level struct {
 func (l *level) getIndex(b byte) (int, bool) {
 	if b < l.min || b > l.max {
 		return -1, false
+	}
+
+	if b == l.min {
+		return 0, true
+	}
+
+	if b == l.max {
+		return l.len - 1, true
 	}
 
 	d := float64(l.max - l.min)
@@ -61,25 +70,27 @@ func (l *level) getIndex(b byte) (int, bool) {
 	return index, true
 }
 
+func (l *level) updateEdges() {
+	if !l.changed {
+		return
+	}
+	l.len = len(l.payload)
+	l.min = l.payload[0]
+	l.max = l.payload[l.len-1]
+	l.changed = false
+}
+
 func (l *level) insert(b byte) {
-	changed := false
-	defer func() {
-		if !changed {
-			return
-		}
-		l.len = len(l.payload)
-		l.min = l.payload[0]
-		l.max = l.payload[l.len-1]
-	}()
+	defer l.updateEdges()
 
 	if b > l.max {
-		changed = true
+		l.changed = true
 		l.payload = append(l.payload, b)
 		return
 	}
 
 	if b < l.min {
-		changed = true
+		l.changed = true
 		l.payload = append([]byte{b}, l.payload...)
 		return
 	}
@@ -103,7 +114,27 @@ func (l *level) insert(b byte) {
 		newpayload = append(newpayload, v)
 	}
 
-	changed = true
+	l.changed = true
+	l.payload = newpayload
+}
+
+func (l *level) delete(b byte) {
+	defer l.updateEdges()
+
+	newpayload := []byte{}
+	changed := false
+
+	for i := 0; i < l.len; i++ {
+		v := l.payload[i]
+		if v == b {
+			changed = true
+			continue
+		}
+
+		newpayload = append(newpayload, v)
+	}
+
+	l.changed = changed
 	l.payload = newpayload
 }
 

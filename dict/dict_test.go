@@ -165,6 +165,51 @@ func Test_Level_getIndex_case4(t *testing.T) {
 	assert.Equal(t, -1, i)
 }
 
+func Test_Level_delete_min(t *testing.T) {
+
+	d := newLevel()
+
+	d.insert(97)
+	d.insert(122)
+	d.insert(104)
+
+	assert.Equal(t, "ahz", d.String())
+
+	d.delete(97)
+
+	assert.Equal(t, "hz", d.String())
+}
+
+func Test_Level_delete_max(t *testing.T) {
+
+	d := newLevel()
+
+	d.insert(97)
+	d.insert(122)
+	d.insert(104)
+
+	assert.Equal(t, "ahz", d.String())
+
+	d.delete(122)
+
+	assert.Equal(t, "ah", d.String())
+}
+
+func Test_Level_delete_middle(t *testing.T) {
+
+	d := newLevel()
+
+	d.insert(97)
+	d.insert(122)
+	d.insert(104)
+
+	assert.Equal(t, "ahz", d.String())
+
+	d.delete(104)
+
+	assert.Equal(t, "az", d.String())
+}
+
 /*
 func Test_Dict(t *testing.T) {
 
