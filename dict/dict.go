@@ -1,35 +1,75 @@
 package dict
 
 type dict struct {
-	payload interface{}
-	key     string
-	root    *dict
-	left    *dict
-	right   *dict
-	parent  *dict
+	payload *level
 }
 
 // Dict whatever
 type Dict interface {
-	Set(string, interface{})
+	Set(string, interface{}) bool
 	Get(string) interface{}
 }
 
-func (d *dict) Set(key string, v interface{}) {
+func (d *dict) Set(key string, v interface{}) bool {
+	if key == "" {
+		return false
+	}
 
+	bkey := []byte(key)
+	l := len(bkey)
+	currlevel := d.payload
+
+	for i, b := range bkey {
+		value := v
+		if i+1 < l {
+			value = nil
+		}
+
+		c := currlevel.insert(b, value)
+
+		if i+1 < l && c.child == nil {
+			c.child = newLevel()
+		}
+
+		currlevel = c.child
+	}
+
+	return true
 }
 
 func (d *dict) Get(key string) interface{} {
+	if key == "" {
+		return nil
+	}
+
+	bkey := []byte(key)
+	l := len(bkey)
+
+	currlevel := d.payload
+
+	for i, b := range bkey {
+		k, ok := currlevel.getIndex(b)
+		if !ok {
+			break
+		}
+
+		if i+1 == l {
+			return currlevel.payload[k].value
+		}
+
+		currlevel = currlevel.payload[k].child
+		if currlevel == nil {
+			break
+		}
+	}
+
 	return nil
-}
-
-func (d *dict) insert(key string, value interface{}) {
-
 }
 
 // New constructor
 func New() Dict {
-	d := &dict{}
-	d.root = d
+	d := &dict{
+		payload: newLevel(),
+	}
 	return d
 }

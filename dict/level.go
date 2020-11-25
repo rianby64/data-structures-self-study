@@ -11,7 +11,7 @@ type level struct {
 	min     byte
 	max     byte
 	len     int
-	payload []cell
+	payload []*cell
 }
 
 func (l *level) getIndex(b byte) (int, bool) {
@@ -77,35 +77,47 @@ func (l *level) updateEdges() {
 	l.changed = false
 }
 
-func (l *level) insert(key byte, value interface{}) {
-	if key == l.max || key == l.min {
-		return
+func (l *level) insert(key byte, value interface{}) (c *cell) {
+	if key == l.min {
+		c = l.payload[0]
+		c.value = value
+		return c
+	}
+
+	if key == l.max {
+		c = l.payload[l.len-1]
+		c.value = value
+		return c
 	}
 
 	defer l.updateEdges()
 
 	if key > l.max {
 		l.changed = true
-		l.payload = append(l.payload, cell{key: key, value: value})
-		return
+		c = &cell{key: key, value: value}
+		l.payload = append(l.payload, c)
+		return c
 	}
 
 	if key < l.min {
 		l.changed = true
-		l.payload = append([]cell{{key: key, value: value}}, l.payload...)
-		return
+		l.payload = append([]*cell{{key: key, value: value}}, l.payload...)
+		return c
 	}
 
-	newpayload := []cell{}
+	newpayload := []*cell{}
 	added := false
 
-	for _, v := range l.payload {
+	for i, v := range l.payload {
 		if v.key == key {
-			return
+			c = l.payload[i]
+			c.value = value
+			return c
 		}
 
 		if v.key > key && !added {
-			newpayload = append(newpayload, cell{key: key, value: value})
+			c = &cell{key: key, value: value}
+			newpayload = append(newpayload, c)
 			added = true
 		}
 		newpayload = append(newpayload, v)
@@ -113,6 +125,7 @@ func (l *level) insert(key byte, value interface{}) {
 
 	l.changed = true
 	l.payload = newpayload
+	return c
 }
 
 func (l *level) delete(key byte) {
@@ -122,7 +135,7 @@ func (l *level) delete(key byte) {
 
 	defer l.updateEdges()
 
-	newpayload := []cell{}
+	newpayload := []*cell{}
 	changed := false
 
 	for i := 0; i < l.len; i++ {
@@ -181,6 +194,6 @@ func (l *level) getvalue(key byte) (interface{}, bool) {
 // newLevel
 func newLevel() *level {
 	return &level{
-		payload: []cell{},
+		payload: []*cell{},
 	}
 }
