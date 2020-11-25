@@ -3,6 +3,7 @@ package dict
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -49,4 +50,26 @@ func Test_Dict_Delete(t *testing.T) {
 	assert.True(t, d.Set("abc", 55))
 	assert.True(t, d.Del("abc"))
 	assert.Nil(t, d.Get("abc"))
+	assert.True(t, d.Set("abc", 55))
+	assert.Equal(t, 55, d.Get("abc"))
+}
+
+func Test_Dict_heavy(t *testing.T) {
+	d := New()
+
+	for i := 0; i < 1000; i++ {
+		r, err := uuid.NewRandom()
+		if err != nil {
+			t.Error(err)
+			return
+		}
+
+		key := r.String()
+
+		assert.Nil(t, d.Get(key), key)
+
+		d.Set(key, true)
+
+		assert.Equal(t, true, d.Get(key))
+	}
 }
