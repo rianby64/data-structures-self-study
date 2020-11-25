@@ -46,5 +46,7 @@ func Test_Dict_Delete(t *testing.T) {
 	d := New()
 
 	assert.False(t, d.Set("", nil))
+	assert.True(t, d.Set("abc", 55))
+	assert.True(t, d.Del("abc"))
 	assert.Nil(t, d.Get("abc"))
 }

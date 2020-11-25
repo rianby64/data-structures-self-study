@@ -82,8 +82,15 @@ func (l *level) updateEdges() {
 	}
 
 	l.len = len(l.payload)
-	l.min = l.payload[0].key
-	l.max = l.payload[l.len-1].key
+
+	if l.len == 0 {
+		l.min = 0
+		l.max = 0
+	} else {
+		l.min = l.payload[0].key
+		l.max = l.payload[l.len-1].key
+	}
+
 	l.changed = false
 }
 
@@ -145,9 +152,9 @@ func (l *level) insert(key byte, value interface{}) (c *cell) {
 	return c
 }
 
-func (l *level) delete(key byte) {
+func (l *level) delete(key byte) bool {
 	if key < l.min || key > l.max {
-		return
+		return false
 	}
 
 	defer l.updateEdges()
@@ -168,6 +175,8 @@ func (l *level) delete(key byte) {
 
 	l.changed = changed
 	l.payload = newpayload
+
+	return changed
 }
 
 func (l *level) getkeys() string {
