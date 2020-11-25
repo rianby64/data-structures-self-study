@@ -1,7 +1,7 @@
 package dict
 
 /*
-func Test_Dict(t *testing.T) {
+func Test_Dict_Get(t *testing.T) {
 
 	d := New()
 
@@ -10,7 +10,7 @@ func Test_Dict(t *testing.T) {
 
 }
 
-func Test_Dict(t *testing.T) {
+func Test_Dict_Set(t *testing.T) {
 
 	d := New()
 

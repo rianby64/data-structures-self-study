@@ -13,7 +13,6 @@ type testcase struct {
 }
 
 func Test_Level_insert_incr(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(97, nil)
@@ -24,7 +23,6 @@ func Test_Level_insert_incr(t *testing.T) {
 }
 
 func Test_Level_insert_decr(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(99, nil)
@@ -35,7 +33,6 @@ func Test_Level_insert_decr(t *testing.T) {
 }
 
 func Test_Level_insert_incr_repeated(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(97, nil)
@@ -48,7 +45,6 @@ func Test_Level_insert_incr_repeated(t *testing.T) {
 }
 
 func Test_Level_insert_decr_repeated(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(99, nil)
@@ -61,7 +57,6 @@ func Test_Level_insert_decr_repeated(t *testing.T) {
 }
 
 func Test_Level_insert_in_the_middle(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(97, nil)
@@ -73,7 +68,6 @@ func Test_Level_insert_in_the_middle(t *testing.T) {
 }
 
 func Test_Level_insert_in_the_middle_repeated(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(97, nil)
@@ -140,7 +134,6 @@ func Test_Level_getIndex_case2(t *testing.T) {
 }
 
 func Test_Level_getIndex_case3(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(97, nil)
@@ -154,7 +147,6 @@ func Test_Level_getIndex_case3(t *testing.T) {
 }
 
 func Test_Level_getIndex_case4(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(97, nil)
@@ -168,7 +160,6 @@ func Test_Level_getIndex_case4(t *testing.T) {
 }
 
 func Test_Level_delete_min(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(97, nil)
@@ -183,7 +174,6 @@ func Test_Level_delete_min(t *testing.T) {
 }
 
 func Test_Level_delete_max(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(97, nil)
@@ -198,7 +188,6 @@ func Test_Level_delete_max(t *testing.T) {
 }
 
 func Test_Level_delete_middle(t *testing.T) {
-
 	d := newLevel()
 
 	d.insert(97, nil)
@@ -210,4 +199,30 @@ func Test_Level_delete_middle(t *testing.T) {
 	d.delete(104)
 
 	assert.Equal(t, "az", d.getkeys())
+}
+
+func Test_Level_getvalue_case1(t *testing.T) {
+	d := newLevel()
+
+	d.insert(97, nil)
+	d.insert(122, 44)
+
+	assert.Equal(t, "az", d.getkeys())
+
+	{
+		ok := d.updatevalue(97, 33)
+		assert.True(t, ok)
+	}
+
+	{
+		v, ok := d.getvalue(97)
+		assert.True(t, ok)
+		assert.Equal(t, 33, v)
+	}
+
+	{
+		v, ok := d.getvalue(122)
+		assert.True(t, ok)
+		assert.Equal(t, 44, v)
+	}
 }

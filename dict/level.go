@@ -159,6 +159,25 @@ func (l *level) getvalues() interface{} {
 	return s
 }
 
+func (l *level) updatevalue(key byte, value interface{}) bool {
+	i, ok := l.getIndex(key)
+	if !ok {
+		return false
+	}
+
+	l.payload[i].value = value
+	return true
+}
+
+func (l *level) getvalue(key byte) (interface{}, bool) {
+	i, ok := l.getIndex(key)
+	if !ok {
+		return nil, false
+	}
+
+	return l.payload[i].value, true
+}
+
 // newLevel
 func newLevel() *level {
 	return &level{
