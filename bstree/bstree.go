@@ -5,10 +5,10 @@ import (
 	"github.com/rianby64/data-structures-self-study/list"
 )
 
-// comparator type
+// comparator type.
 type comparator func(a, b interface{}) bool
 
-// BStree stands for Binary Search Tree interface
+// BStree stands for Binary Search Tree interface.
 type BStree interface {
 	Value() interface{}
 	Insert(v interface{}) BStree
@@ -36,8 +36,10 @@ type bstree struct {
 func (t *bstree) Delete() BStree {
 	if t.left == nil && t.right == nil && t.parent == nil {
 		t.payload = nil
+
 		return nil
 	}
+
 	return delete(t, t.parent)
 }
 
@@ -49,18 +51,23 @@ func (t *bstree) Parent() BStree {
 	if t.parent == nil {
 		return nil
 	}
+
 	return t.parent
 }
+
 func (t *bstree) Left() BStree {
 	if t.left == nil {
 		return nil
 	}
+
 	return t.left
 }
+
 func (t *bstree) Right() BStree {
 	if t.right == nil {
 		return nil
 	}
+
 	return t.right
 }
 
@@ -76,6 +83,7 @@ func (t *bstree) Value() interface{} {
 	if t.payload != nil {
 		return t.payload.Value()
 	}
+
 	return nil
 }
 
@@ -94,7 +102,7 @@ func (t *bstree) Insert(v interface{}) BStree {
 	return insert(root, v, root.comparator)
 }
 
-// New constructor
+// New constructor.
 func New(comparator func(a, b interface{}) bool) BStree {
 	t := &bstree{}
 	t.root = t

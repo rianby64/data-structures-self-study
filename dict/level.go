@@ -1,5 +1,9 @@
 package dict
 
+const (
+	half float64 = 2
+)
+
 type cell struct {
 	key   byte
 	value interface{}
@@ -33,10 +37,11 @@ func (l *level) getIndex(b byte) (int, bool) {
 	q := float64(int(l.max) - int(b))
 
 	ip := p / d
-	iq := float64(float64(1) - (q / d))
+	iq := (float64(1) - (q / d))
 
-	i := float64(l.len) * (ip + iq) / float64(2)
+	i := float64(l.len) * (ip + iq) / half
 	index := int(i)
+
 	if index >= l.len {
 		index = l.len - 1
 	}
@@ -52,8 +57,10 @@ func (l *level) getIndex(b byte) (int, bool) {
 			if index >= l.len {
 				return -1, false
 			}
+
 			actual = l.payload[index]
 		}
+
 		return index, true
 	}
 
@@ -62,8 +69,10 @@ func (l *level) getIndex(b byte) (int, bool) {
 		if index < 0 {
 			return -1, false
 		}
+
 		actual = l.payload[index]
 	}
+
 	return index, true
 }
 
@@ -71,6 +80,7 @@ func (l *level) updateEdges() {
 	if !l.changed {
 		return
 	}
+
 	l.len = len(l.payload)
 	l.min = l.payload[0].key
 	l.max = l.payload[l.len-1].key
@@ -81,12 +91,14 @@ func (l *level) insert(key byte, value interface{}) (c *cell) {
 	if key == l.min {
 		c = l.payload[0]
 		c.value = value
+
 		return c
 	}
 
 	if key == l.max {
 		c = l.payload[l.len-1]
 		c.value = value
+
 		return c
 	}
 
@@ -96,12 +108,14 @@ func (l *level) insert(key byte, value interface{}) (c *cell) {
 		l.changed = true
 		c = &cell{key: key, value: value}
 		l.payload = append(l.payload, c)
+
 		return c
 	}
 
 	if key < l.min {
 		l.changed = true
 		l.payload = append([]*cell{{key: key, value: value}}, l.payload...)
+
 		return c
 	}
 
@@ -112,6 +126,7 @@ func (l *level) insert(key byte, value interface{}) (c *cell) {
 		if v.key == key {
 			c = l.payload[i]
 			c.value = value
+
 			return c
 		}
 
@@ -120,11 +135,13 @@ func (l *level) insert(key byte, value interface{}) (c *cell) {
 			newpayload = append(newpayload, c)
 			added = true
 		}
+
 		newpayload = append(newpayload, v)
 	}
 
 	l.changed = true
 	l.payload = newpayload
+
 	return c
 }
 
@@ -142,6 +159,7 @@ func (l *level) delete(key byte) {
 		v := l.payload[i]
 		if v.key == key {
 			changed = true
+
 			continue
 		}
 
@@ -156,7 +174,7 @@ func (l *level) getkeys() string {
 	s := ""
 
 	for _, v := range l.payload {
-		s = s + string(v.key)
+		s += string(v.key)
 	}
 
 	return s
@@ -179,6 +197,7 @@ func (l *level) updatevalue(key byte, value interface{}) bool {
 	}
 
 	l.payload[i].value = value
+
 	return true
 }
 
@@ -191,7 +210,7 @@ func (l *level) getvalue(key byte) (interface{}, bool) {
 	return l.payload[i].value, true
 }
 
-// newLevel
+// newLevel constructor.
 func newLevel() *level {
 	return &level{
 		payload: []*cell{},

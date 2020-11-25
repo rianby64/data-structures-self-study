@@ -9,12 +9,14 @@ import (
 
 func castTobtree(b BStree) (*bstree, bool) {
 	casted, ok := b.(*bstree)
+
 	return casted, ok
 }
 
 func corder(a, b interface{}) bool {
 	na := a.(int)
 	nb := b.(int)
+
 	return na >= nb
 }
 
@@ -28,10 +30,12 @@ func cequal(a, b interface{}) bool {
 func checkExpected(ll list.List, expected []int, t *testing.T) {
 	actual := []int{}
 	i := 0
+
 	for curr := ll.Next(); curr != nil; curr = curr.Next() {
 		if i > len(expected) {
 			break
 		}
+
 		actual = append(actual, curr.Value().(int))
 		i++
 	}
@@ -50,11 +54,12 @@ func Test_tree_inorder_comparator_nil(t *testing.T) {
 
 	expectedNodes := []BStree{n1, n2, n3}
 	l := btree.Inorder()
-
 	i := 0
+
 	for curr := l.Next(); curr != nil; curr = curr.Next() {
 		expectedNode := expectedNodes[i]
 		i++
+
 		assert.Equal(t, expectedNode.Value(), curr.Value())
 	}
 }
@@ -201,7 +206,7 @@ func Test_tree_search_nil(t *testing.T) {
 	assert.Equal(t, nil, actual)
 }
 
-func Test_tree_delete_emtpy(t *testing.T) {
+func Test_tree_delete_empty(t *testing.T) {
 	btree := New(corder)
 
 	deleted := btree.Delete()
@@ -258,6 +263,7 @@ func Test_tree_delete_case_3(t *testing.T) {
 	checkExpected(lexpected, expected, t)
 }
 
+// nolint: funlen
 func Test_tree_delete_case_4(t *testing.T) {
 	btree := New(corder)
 	deleted := btree.Insert(50).Insert(30).Insert(20).Insert(40).Insert(70)
@@ -429,7 +435,7 @@ func Test_tree_findmax_case_2(t *testing.T) {
 	assert.Equal(t, 70, max.Value())
 }
 
-func Test_tree_findmax_emtpy_tree(t *testing.T) {
+func Test_tree_findmax_empty_tree(t *testing.T) {
 	btree := New(corder)
 
 	cbtree, _ := castTobtree(btree)

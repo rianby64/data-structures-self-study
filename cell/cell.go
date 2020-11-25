@@ -1,6 +1,6 @@
 package cell
 
-// Cell interface
+// Cell interface.
 type Cell interface {
 	Value() interface{}
 	SetValue(v interface{})
@@ -18,7 +18,7 @@ func (c *cell) SetValue(v interface{}) {
 	c.payload = v
 }
 
-// New constructor
+// New constructor.
 func New(payload interface{}) Cell {
 	return &cell{
 		payload: payload,

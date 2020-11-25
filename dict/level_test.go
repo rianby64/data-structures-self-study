@@ -106,7 +106,6 @@ func Test_Level_getIndex_case1(t *testing.T) {
 		v, ok := d.getIndex(testValue.key)
 		assert.True(t, ok)
 		assert.Equal(t, testValue.expected, v)
-
 	}
 }
 
@@ -129,7 +128,6 @@ func Test_Level_getIndex_case2(t *testing.T) {
 		v, ok := d.getIndex(testValue.key)
 		assert.True(t, ok)
 		assert.Equal(t, testValue.expected, v)
-
 	}
 }
 

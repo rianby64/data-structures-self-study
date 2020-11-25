@@ -4,7 +4,7 @@ import (
 	"github.com/rianby64/data-structures-self-study/list"
 )
 
-// Stack interface
+// Stack interface.
 type Stack interface {
 	Pop() interface{}
 	Push(c interface{})
@@ -16,7 +16,9 @@ type lifo struct {
 
 func (l *lifo) Pop() interface{} {
 	last := l.list.Last()
+
 	defer last.Delete()
+
 	return last.Value()
 }
 
@@ -25,7 +27,7 @@ func (l *lifo) Push(c interface{}) {
 	item.Insert(c)
 }
 
-// New constructs an stack on top of a lifo
+// New constructs an stack on top of a lifo.
 func New() Stack {
 	return &lifo{
 		list: list.New(),

@@ -4,7 +4,7 @@ type dict struct {
 	payload *level
 }
 
-// Dict whatever
+// Dict whatever.
 type Dict interface {
 	Set(string, interface{}) bool
 	Get(string) interface{}
@@ -66,10 +66,11 @@ func (d *dict) Get(key string) interface{} {
 	return nil
 }
 
-// New constructor
+// New constructor.
 func New() Dict {
 	d := &dict{
 		payload: newLevel(),
 	}
+
 	return d
 }

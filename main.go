@@ -7,18 +7,20 @@ import (
 )
 
 func main() {
-
 	dll := list.New()
 
+	// nolint: gomnd
 	dll.Insert(33).Insert(44).Insert(55).Insert(66)
 
 	ss := dll.Filter(func(d list.List, i int) bool {
 		fmt.Println(d, i)
+
 		return true
 	})
 
 	found := dll.Find(func(d list.List, i int) bool {
 		v := d.Value().(int)
+
 		return v == 44
 	})
 

@@ -4,7 +4,7 @@ import (
 	"github.com/rianby64/data-structures-self-study/list"
 )
 
-// Queue interface
+// Queue interface.
 type Queue interface {
 	Enqueue(v interface{})
 	Dequeue() interface{}
@@ -20,11 +20,13 @@ func (q *queue) Enqueue(v interface{}) {
 
 func (q *queue) Dequeue() interface{} {
 	last := q.list.Last()
+
 	defer last.Delete()
+
 	return last.Value()
 }
 
-// New constructor
+// New constructor.
 func New() Queue {
 	return &queue{
 		list: list.New(),
