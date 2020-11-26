@@ -121,7 +121,8 @@ func (l *level) insert(key byte, value interface{}) (c *cell) {
 
 	if key < l.min {
 		l.changed = true
-		l.payload = append([]*cell{{key: key, value: value}}, l.payload...)
+		c = &cell{key: key, value: value}
+		l.payload = append([]*cell{c}, l.payload...)
 
 		return c
 	}

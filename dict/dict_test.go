@@ -57,19 +57,18 @@ func Test_Dict_Delete(t *testing.T) {
 func Test_Dict_heavy(t *testing.T) {
 	d := New()
 
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 10000; i++ {
 		r, err := uuid.NewRandom()
 		if err != nil {
 			t.Error(err)
+
 			return
 		}
 
 		key := r.String()
 
 		assert.Nil(t, d.Get(key), key)
-
 		d.Set(key, true)
-
 		assert.Equal(t, true, d.Get(key))
 	}
 }
