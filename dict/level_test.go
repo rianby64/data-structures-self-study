@@ -129,6 +129,10 @@ func Test_Level_getIndex_case2(t *testing.T) {
 		assert.True(t, ok)
 		assert.Equal(t, testValue.expected, v)
 	}
+
+	v, ok := d.getvalue(190)
+	assert.False(t, ok)
+	assert.Nil(t, v)
 }
 
 func Test_Level_getIndex_case3(t *testing.T) {
@@ -222,5 +226,20 @@ func Test_Level_getvalue_case1(t *testing.T) {
 		v, ok := d.getvalue(122)
 		assert.True(t, ok)
 		assert.Equal(t, 44, v)
+	}
+
+	{
+		ok := d.updatevalue(190, 33)
+		assert.False(t, ok)
+	}
+
+	{
+		ok := d.delete(190)
+		assert.False(t, ok)
+	}
+
+	{
+		ok := d.delete(10)
+		assert.False(t, ok)
 	}
 }

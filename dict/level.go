@@ -42,38 +42,31 @@ func (l *level) getIndex(b byte) (int, bool) {
 	i := float64(l.len) * (ip + iq) / half
 	index := int(i)
 
-	if index >= l.len {
-		index = l.len - 1
-	}
-
 	actual := l.payload[index]
+
 	if actual.key == b {
 		return index, true
 	}
 
 	if actual.key < b {
-		for actual.key != b {
+		for actual.key < b {
 			index++
-			if index >= l.len {
-				return -1, false
-			}
-
 			actual = l.payload[index]
 		}
+	}
 
+	if actual.key > b {
+		for actual.key > b {
+			index--
+			actual = l.payload[index]
+		}
+	}
+
+	if actual.key == b {
 		return index, true
 	}
 
-	for actual.key != b {
-		index--
-		if index < 0 {
-			return -1, false
-		}
-
-		actual = l.payload[index]
-	}
-
-	return index, true
+	return -1, false
 }
 
 func (l *level) updateEdges() {
@@ -95,33 +88,36 @@ func (l *level) updateEdges() {
 }
 
 func (l *level) insert(key byte, value interface{}) (c *cell) {
+	defer func() {
+		if c.value == nil || value != nil {
+			c.value = value
+		}
+
+		l.updateEdges()
+	}()
+
 	if key == l.min {
 		c = l.payload[0]
-		c.value = value
 
 		return c
 	}
 
 	if key == l.max {
 		c = l.payload[l.len-1]
-		c.value = value
 
 		return c
 	}
 
-	defer l.updateEdges()
+	c = &cell{key: key}
+	l.changed = true
 
 	if key > l.max {
-		l.changed = true
-		c = &cell{key: key, value: value}
 		l.payload = append(l.payload, c)
 
 		return c
 	}
 
 	if key < l.min {
-		l.changed = true
-		c = &cell{key: key, value: value}
 		l.payload = append([]*cell{c}, l.payload...)
 
 		return c
@@ -133,13 +129,13 @@ func (l *level) insert(key byte, value interface{}) (c *cell) {
 	for i, v := range l.payload {
 		if v.key == key {
 			c = l.payload[i]
-			c.value = value
+			l.changed = false
 
 			return c
 		}
 
 		if v.key > key && !added {
-			c = &cell{key: key, value: value}
+			c = &cell{key: key}
 			newpayload = append(newpayload, c)
 			added = true
 		}
@@ -147,7 +143,6 @@ func (l *level) insert(key byte, value interface{}) (c *cell) {
 		newpayload = append(newpayload, v)
 	}
 
-	l.changed = true
 	l.payload = newpayload
 
 	return c

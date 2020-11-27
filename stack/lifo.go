@@ -1,4 +1,4 @@
-package lifo
+package stack
 
 import (
 	"github.com/rianby64/data-structures-self-study/list"

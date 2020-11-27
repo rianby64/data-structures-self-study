@@ -1,4 +1,4 @@
-package lifo
+package stack
 
 import (
 	"testing"
