@@ -1,0 +1,20 @@
+
+FROM golang
+
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.33.0
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+COPY ./Gopkg.toml /go/src/github.com/rianby64/data-structures-self-study/Gopkg.toml
+COPY ./Gopkg.lock /go/src/github.com/rianby64/data-structures-self-study/Gopkg.lock
+
+WORKDIR /go/src/github.com/rianby64/data-structures-self-study
+
+RUN dep ensure -v -vendor-only
+
+COPY ./ /go/src/github.com/rianby64/data-structures-self-study/.
+
+RUN dep ensure -v
+
+RUN golangci-lint run
+
+CMD ["go", "test", "./..."]
